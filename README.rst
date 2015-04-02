@@ -113,3 +113,12 @@ This is largely based on a combination of:
 - http://flask-basicauth.readthedocs.org/en/latest/
 - http://flask.pocoo.org/snippets/8/
 - http://blog.miguelgrinberg.com/post/restful-authentication-with-flask
+
+
+Links
+`````
+
+* `documentation
+  <https://github.com/carsongee/flask-htpasswd/blob/master/README.rst>`_
+* `development version
+  <https://github.com/carsongee/flask-htpasswd/archive/master.tar.gz#egg=flask-htpasswd-dev>`_
