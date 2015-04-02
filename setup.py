@@ -4,11 +4,23 @@ Flask-htpasswd
 
 Flask extension for providing basic digest authentication and token
 authentication via apache htpasswd files.
+
+Links
+`````
+
+* `documentation
+   <https://github.com/carsongee/flask-htpasswd/blob/master/README.rst>`_
+* `development version
+  <https://github.com/carsongee/flask-htpasswd/archive/master.tar.gz#egg=flask-htpasswd-dev>`_
 """
+
 from setuptools import setup
 
 with open('README.rst') as readme:
     README = readme.read()
+
+with open('test_requirements.txt') as test_reqs:
+    TESTS_REQUIRE = test_reqs.readlines(),
 
 setup(
     name='flask-htpasswd',
@@ -29,6 +41,8 @@ setup(
         'passlib',
         'itsdangerous',
     ],
+    tests_require=TESTS_REQUIRE,
+    test_suite="nose.collector",
     classifiers=[
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
