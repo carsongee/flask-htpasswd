@@ -10,8 +10,10 @@ Flask-htpasswd
     :target: https://github.com/carsongee/flask-htpasswd/blob/master/LICENSE
 
 Flask extension for providing basic digest and token authentication
-via apache htpasswd files.  So largely it fits between Flask-Security
-which has additional dependencies and Flask-BasicAuth which only
+via apache htpasswd files.  So largely it fits between `Flask-Security
+<https://pythonhosted.org/Flask-Security/>`_ which has additional
+dependencies and `Flask-BasicAuth
+<http://flask-basicauth.readthedocs.org/en/latest/>`_ which only
 allows you to have one user (and also puts the plain text password
 into the configuration).
 
@@ -102,6 +104,7 @@ Acknowledgements
 ================
 
 This is largely based on a combination of:
+
 - http://flask-basicauth.readthedocs.org/en/latest/
 - http://flask.pocoo.org/snippets/8/
 - http://blog.miguelgrinberg.com/post/restful-authentication-with-flask
