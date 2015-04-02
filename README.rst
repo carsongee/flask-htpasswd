@@ -6,8 +6,13 @@ Flask-htpasswd
     :target: https://coveralls.io/r/carsongee/flask-htpasswd
 .. image:: https://img.shields.io/github/issues/carsongee/flask-htpasswd.svg
     :target: https://github.com/carsongee/flask-htpasswd/issues
+.. image:: https://img.shields.io/pypi/dm/flask-htpasswd.svg
+    :target: https://pypi.python.org/pypi/flask-htpasswd/0.1.0
+.. image:: https://img.shields.io/pypi/v/flask-htpasswd.svg
+    :target: https://pypi.python.org/pypi/flask-htpasswd/0.1.0
 .. image:: https://img.shields.io/badge/license-BSD-blue.svg
     :target: https://github.com/carsongee/flask-htpasswd/blob/master/LICENSE
+
 
 Flask extension for providing basic digest and token authentication
 via apache htpasswd files.  So largely it fits between `Flask-Security
