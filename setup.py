@@ -12,7 +12,7 @@ with open('README.rst') as readme:
 
 setup(
     name='flask-htpasswd',
-    version='0.1.0',
+    version='0.1.1',
     url='http://github.com/carsongee/flask-htpasswd',
     license='BSD New',
     author='Carson Gee',
