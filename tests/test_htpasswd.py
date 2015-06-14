@@ -8,6 +8,7 @@ import unittest
 from flask import request, Flask
 # pylint: disable=no-name-in-module,import-error
 from flask.ext.htpasswd import HtPasswdAuth
+from itsdangerous import JSONWebSignatureSerializer as Serializer
 import mock
 
 
@@ -18,10 +19,6 @@ class TestAuth(unittest.TestCase):
     """
     TEST_USER = 'foo'
     TEST_PASS = 'bar'
-    TEST_TOKEN = ('eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImZvbyIsImhhc2hoYXNo'
-                  'IjoiNTEwNjI3M2Y3Nzg5ZjFlMjZiNGEyMTI3ODk5OTJmNzVjMTU0MzNmN'
-                  'DAyZjNlOTRhZDE4ZTdjODBhZWU4MGZhZiJ9.CnEjyCBmPKnEIaidxfmww'
-                  'wt-EqrIiy8LvTioZpXFt9I')
     NOT_USER = 'notuser'
 
     def setUp(self):
@@ -104,22 +101,25 @@ class TestAuth(unittest.TestCase):
         """
         test_user = self.TEST_USER
         not_user = self.NOT_USER
-        known_token = self.TEST_TOKEN
         known_hashhash = ('5106273f7789f1e26b4a212789992f75c15433f402f3e94a'
                           'd18e7c80aee80faf')
         self._setup_normal_extension()
 
         with self.app.app_context():
 
-            # Verify token generation against known value
             token = self.htpasswd.generate_token(test_user)
-            self.assertEqual(known_token, token)
 
             # Verify hashhash against known value
             hashhash = self.htpasswd.get_hashhash(test_user)
             self.assertEqual(hashhash, known_hashhash)
 
-            # Now go ahead and verify the reverse
+            # Now that we verified our hashhash, independently verify
+            # the data with a serializer from config (not trusting
+            # get_signature here).
+            serializer = Serializer(self.app.config['FLASK_SECRET'])
+            self.assertEqual(serializer.loads(token)['hashhash'], hashhash)
+
+            # Now go ahead and verify the reverse, trusting, and verifying get_signature
             serializer = self.htpasswd.get_signature()
             data = serializer.loads(token)
             self.assertTrue(data['username'], test_user)
