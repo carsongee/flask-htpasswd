@@ -1,6 +1,7 @@
 """
 Test module for Flask-htpasswd extension
 """
+from __future__ import absolute_import, unicode_literals
 import base64
 import os
 import unittest
@@ -26,6 +27,7 @@ class TestAuth(unittest.TestCase):
         self.app = Flask(__name__)
         self.app.config['FLASK_SECRET'] = 'dummy'
         self.app.debug = True
+        self.htpasswd = None
 
     def _setup_normal_extension(self, auth_all=False, realm=None):
         """Setup the extension with the test htpasswd file."""
@@ -47,7 +49,7 @@ class TestAuth(unittest.TestCase):
         Returns decorated mock function.
         """
         wrapped = mock.Mock()
-        wrapped.__name__ = 'foo'
+        wrapped.__name__ = str('foo')
         decorated = self.htpasswd.required(wrapped)
         return wrapped, decorated
 
@@ -59,7 +61,7 @@ class TestAuth(unittest.TestCase):
     @mock.patch('flask_htpasswd.log')
     def test_no_htpasswd_file(self, mocked_log):
         """Verify that we are just fine without an htpasswd file"""
-        self.htpasswd = HtPasswdAuth(self.app)
+        HtPasswdAuth(self.app)
         mocked_log.critical.assert_called_with(
             'No htpasswd file loaded, please set `FLASK_HTPASSWD`'
             'or `FLASK_HTPASSWD_PATH` environment variable to a '
@@ -119,7 +121,8 @@ class TestAuth(unittest.TestCase):
             serializer = Serializer(self.app.config['FLASK_SECRET'])
             self.assertEqual(serializer.loads(token)['hashhash'], hashhash)
 
-            # Now go ahead and verify the reverse, trusting, and verifying get_signature
+            # Now go ahead and verify the reverse, trusting, and
+            # verifying get_signature.
             serializer = self.htpasswd.get_signature()
             data = serializer.loads(token)
             self.assertTrue(data['username'], test_user)
@@ -186,9 +189,13 @@ class TestAuth(unittest.TestCase):
         self._setup_normal_extension()
         # Test successful basic auth
         with self.app.test_request_context(headers={
-            'Authorization': 'Basic {0}'.format(base64.b64encode(
-                '{0}:{1}'.format(self.TEST_USER, self.TEST_PASS)
-            ))
+            'Authorization': 'Basic {0}'.format(
+                base64.b64encode(
+                    '{0}:{1}'.format(
+                        self.TEST_USER, self.TEST_PASS
+                    ).encode('ascii')
+                ).decode('ascii')
+            )
         }):
             wrapped, decorated = self._get_requires_auth_decorator()
             decorated()
@@ -228,23 +235,24 @@ class TestAuth(unittest.TestCase):
 
     def test_auth_all_views_disabled(self):
         """Verify that with ``FLASK_AUTH_ALL`` turned on, views are normal"""
-
         self._setup_normal_extension()
 
         @self.app.route('/')
-        def view():
+        def _():
+            """Simple view to verify we aren't protected."""
             return 'Hi'
 
         response = self.app.test_client().get('/')
         self.assertEqual(200, response.status_code)
-        self.assertEqual('Hi', response.data)
+        self.assertEqual('Hi', response.data.decode('UTF-8'))
 
     def test_auth_all_views_enabled(self):
         """Verify that with ``FLASK_AUTH_ALL`` turned on, views need auth"""
         self._setup_normal_extension(auth_all=True)
 
         @self.app.route('/')
-        def view():
+        def _():
+            """Simple view to verify we are protected."""
             return 'Hi'
 
         response = self.app.test_client().get('/')
@@ -254,13 +262,17 @@ class TestAuth(unittest.TestCase):
         response = self.app.test_client().get(
             '/',
             headers={
-                'Authorization': 'Basic {0}'.format(base64.b64encode(
-                    '{0}:{1}'.format(self.TEST_USER, self.TEST_PASS)
-                ))
+                'Authorization': 'Basic {0}'.format(
+                    base64.b64encode(
+                        '{0}:{1}'.format(
+                            self.TEST_USER, self.TEST_PASS
+                        ).encode('ascii')
+                    ).decode('ascii')
+                )
             }
         )
         self.assertEqual(200, response.status_code)
-        self.assertEqual('Hi', response.data)
+        self.assertEqual('Hi', response.data.decode('UTF-8'))
 
     def test_basic_auth_realm_config(self):
         """Verify that the auth realm returned is configurable"""
@@ -268,8 +280,12 @@ class TestAuth(unittest.TestCase):
         self._setup_normal_extension(auth_all=True, realm=realm)
 
         @self.app.route('/')
-        def view():
-            return 'Hi'
+        def _():
+            """Simple view to prompt for authentication."""
+            self.fail(
+                'This view should not have been called'
+            )  # pragma: no cover
+
         response = self.app.test_client().get('/')
         self.assertEqual(401, response.status_code)
         self.assertEqual(
@@ -283,7 +299,10 @@ class TestAuth(unittest.TestCase):
 
         @self.app.route('/')
         @self.htpasswd.required
-        def view():
-            return 'Hi'
+        def _():
+            """Simple view to validate authentication."""
+            self.fail(
+                'This view should not have been called'
+            )  # pragma: no cover
         response = self.app.test_client().get('/')
         self.assertEqual(401, response.status_code)
