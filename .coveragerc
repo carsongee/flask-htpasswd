@@ -1,0 +1,16 @@
+[run]
+
+branch = True
+omit =
+    .tox/*
+    setup.py
+
+[paths]
+
+source =
+    tests
+    flask_htpasswd
+
+[report] 
+exclude_lines =
+    pragma: no cover

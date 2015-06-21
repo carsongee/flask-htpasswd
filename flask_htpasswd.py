@@ -3,6 +3,7 @@
 Decorator, configuration, and error handler for basic and token
 authentication using htpasswd files
 """
+from __future__ import absolute_import, unicode_literals
 from functools import wraps
 import hashlib
 import logging
@@ -101,7 +102,7 @@ class HtPasswdAuth(object):
                 'username': username,
                 'hashhash': self.get_hashhash(username)
             }
-        )
+        ).decode('UTF-8')
 
     def check_token_auth(self, token):
         """
