@@ -104,6 +104,13 @@ It can then be used by the user by adding it to the header of their requests, so
   requests.get('http://localhost:5000/', headers={'Authorization': 'token <token>'})
 
 
+Release Notes
+=============
+
+0.2.0
+`````
+
+- Python 3 compatability
 
 Acknowledgements
 ================

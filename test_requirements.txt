@@ -1,5 +1,8 @@
-coverage
 mock
-nose
-pep8
-pylint
+pytest
+pytest-pep8
+pytest-pylint
+pytest-cov
+pytest-capturelog
+pytest-watch
+coveralls
