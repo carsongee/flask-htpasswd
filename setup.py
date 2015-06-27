@@ -13,18 +13,49 @@ Links
 * `development version
   <https://github.com/carsongee/flask-htpasswd/archive/master.tar.gz#egg=flask-htpasswd-dev>`_
 """
-
+from __future__ import absolute_import, unicode_literals
+import codecs
 from setuptools import setup
+from setuptools.command.test import test as TestCommand
 
-with open('README.rst') as readme:
+with codecs.open('README.rst', encoding='utf-8') as readme:
     README = readme.read()
 
-with open('test_requirements.txt') as test_reqs:
-    TESTS_REQUIRE = test_reqs.readlines(),
+
+class Tox(TestCommand):
+    """
+    Boiler plate test command for running tox with ``python setup.py test``.
+    Borrowed from: https://testrun.org/tox/latest/example/basic.html
+    """
+    # pylint: disable=attribute-defined-outside-init
+    user_options = [(
+        str('tox-args='),
+        str('a'),
+        str('Arguments to pass to tox')
+    )]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        self.tox_args = []
+
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+
+    def run_tests(self):
+        # Import here, cause outside the eggs aren't loaded
+        import tox  # pylint: disable=import-error
+        import shlex
+        args = self.tox_args
+        if args:
+            args = shlex.split(self.tox_args)
+        tox.cmdline(args=args)
+
 
 setup(
     name='flask-htpasswd',
-    version='0.1.1',
+    version='0.2.0',
     url='http://github.com/carsongee/flask-htpasswd',
     license='BSD New',
     author='Carson Gee',
@@ -40,9 +71,10 @@ setup(
         'Flask',
         'passlib',
         'itsdangerous',
+        'tox',
     ],
-    tests_require=TESTS_REQUIRE,
-    test_suite="nose.collector",
+    tests_require=['tox'],
+    cmdclass={'test': Tox},
     classifiers=[
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
@@ -50,6 +82,9 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
-        'Topic :: Software Development :: Libraries :: Python Modules'
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Framework :: Flask',
     ]
 )
