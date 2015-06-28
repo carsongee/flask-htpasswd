@@ -108,6 +108,12 @@ It can then be used by the user by adding it to the header of their requests, so
 Release Notes
 =============
 
+0.3.0
+`````
+
+- Added function to reload user database
+- Added user to ``flask.g`` with FLASK_AUTH_ALL=True
+
 0.2.0
 `````
 
