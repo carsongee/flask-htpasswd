@@ -8,7 +8,7 @@ from functools import wraps
 import hashlib
 import logging
 
-from flask import request, Response, current_app
+from flask import request, Response, current_app, g
 from itsdangerous import JSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature
 from passlib.apache import HtpasswdFile
@@ -52,9 +52,10 @@ class HtPasswdAuth(object):
             """Pre request processing for enabling full app authentication."""
             if not current_app.config['FLASK_AUTH_ALL']:
                 return
-            is_valid, _ = self.authenticate()
+            is_valid, user = self.authenticate()
             if not is_valid:
                 return self.auth_failed()
+            g.user = user
 
     def load_users(self, app):
         """

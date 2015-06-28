@@ -63,7 +63,8 @@ accept tokens).
 If you would like to protect all of your views, that is easy too, just
 add a little config. By setting ``app.config['FLASK_AUTH_ALL']=True``
 before initializing the extension, an ``@app.before_request`` is added
-that will require auth for all pages.
+that will require auth for all pages, and it will add the user as
+``flask.g.user``.
 
 One last small feature, is that you can also set the authentication
 realm.  The default is 'Login Required', but it can be set with
