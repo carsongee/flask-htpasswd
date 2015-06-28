@@ -8,7 +8,7 @@ from functools import wraps
 import hashlib
 import logging
 
-from flask import request, Response, current_app
+from flask import request, Response, current_app, g
 from itsdangerous import JSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature
 from passlib.apache import HtpasswdFile
@@ -28,7 +28,8 @@ class HtPasswdAuth(object):
             self.init_app(app)
 
     def init_app(self, app):
-        """Find and configure the user database from specified file
+        """
+        Find and configure the user database from specified file
         """
         app.config.setdefault('FLASK_AUTH_ALL', False)
         app.config.setdefault('FLASK_AUTH_REALM', 'Login Required')
@@ -37,10 +38,7 @@ class HtPasswdAuth(object):
 
         # Load up user database
         try:
-            users = HtpasswdFile(
-                app.config['FLASK_HTPASSWD_PATH']
-            )
-            self.users = users
+            self.load_users(app)
         except IOError:
             log.critical(
                 'No htpasswd file loaded, please set `FLASK_HTPASSWD`'
@@ -54,9 +52,26 @@ class HtPasswdAuth(object):
             """Pre request processing for enabling full app authentication."""
             if not current_app.config['FLASK_AUTH_ALL']:
                 return
-            is_valid, _ = self.authenticate()
+            is_valid, user = self.authenticate()
             if not is_valid:
                 return self.auth_failed()
+            g.user = user
+
+    def load_users(self, app):
+        """
+        Load users from configured file.
+
+        Args:
+            app (flask.Flask): Flask application to load users from.
+
+        Raises:
+            IOError: If the configured htpasswd file does not exist.
+        Returns:
+            None
+        """
+        self.users = HtpasswdFile(
+            app.config['FLASK_HTPASSWD_PATH']
+        )
 
     def check_basic_auth(self, username, password):
         """
