@@ -6,7 +6,7 @@ import base64
 import os
 import unittest
 
-from flask import request, Flask
+from flask import request, Flask, g
 # pylint: disable=no-name-in-module,import-error
 from flask.ext.htpasswd import HtPasswdAuth
 from itsdangerous import JSONWebSignatureSerializer as Serializer
@@ -234,7 +234,7 @@ class TestAuth(unittest.TestCase):
             self.assertEqual(401, response.status_code)
 
     def test_auth_all_views_disabled(self):
-        """Verify that with ``FLASK_AUTH_ALL`` turned on, views are normal"""
+        """Verify that with ``FLASK_AUTH_ALL`` turned off, views are normal"""
         self._setup_normal_extension()
 
         @self.app.route('/')
@@ -253,6 +253,8 @@ class TestAuth(unittest.TestCase):
         @self.app.route('/')
         def _():
             """Simple view to verify we are protected."""
+            # Validate we have the user available in g
+            self.assertEqual(g.user, self.TEST_USER)
             return 'Hi'
 
         response = self.app.test_client().get('/')
