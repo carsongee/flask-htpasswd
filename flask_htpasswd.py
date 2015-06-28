@@ -28,7 +28,8 @@ class HtPasswdAuth(object):
             self.init_app(app)
 
     def init_app(self, app):
-        """Find and configure the user database from specified file
+        """
+        Find and configure the user database from specified file
         """
         app.config.setdefault('FLASK_AUTH_ALL', False)
         app.config.setdefault('FLASK_AUTH_REALM', 'Login Required')
@@ -37,10 +38,7 @@ class HtPasswdAuth(object):
 
         # Load up user database
         try:
-            users = HtpasswdFile(
-                app.config['FLASK_HTPASSWD_PATH']
-            )
-            self.users = users
+            self.load_users(app)
         except IOError:
             log.critical(
                 'No htpasswd file loaded, please set `FLASK_HTPASSWD`'
@@ -57,6 +55,22 @@ class HtPasswdAuth(object):
             is_valid, _ = self.authenticate()
             if not is_valid:
                 return self.auth_failed()
+
+    def load_users(self, app):
+        """
+        Load users from configured file.
+
+        Args:
+            app (flask.Flask): Flask application to load users from.
+
+        Raises:
+            IOError: If the configured htpasswd file does not exist.
+        Returns:
+            None
+        """
+        self.users = HtpasswdFile(
+            app.config['FLASK_HTPASSWD_PATH']
+        )
 
     def check_basic_auth(self, username, password):
         """
