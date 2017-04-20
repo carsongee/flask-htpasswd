@@ -82,7 +82,7 @@ class HtPasswdAuth(object):
             username, password
         )
         if not valid:
-            log.warn('Invalid login from %s', username)
+            log.warning('Invalid login from %s', username)
             valid = False
         return (
             valid,
@@ -101,7 +101,7 @@ class HtPasswdAuth(object):
         Generate a digest of the htpasswd hash
         """
         return hashlib.sha256(
-            self.users.find(username)
+            self.users.get_hash(username)
         ).hexdigest()
 
     def generate_token(self, username):
@@ -129,16 +129,16 @@ class HtPasswdAuth(object):
         try:
             data = serializer.loads(token)
         except BadSignature:
-            log.warn('Received bad token signature')
+            log.warning('Received bad token signature')
             return False, None
         if data['username'] not in self.users.users():
-            log.warn(
+            log.warning(
                 'Token auth signed message, but invalid user %s',
                 data['username']
             )
             return False, None
         if data['hashhash'] != self.get_hashhash(data['username']):
-            log.warn(
+            log.warning(
                 'Token and password do not match, %s '
                 'needs to regenerate token',
                 data['username']
