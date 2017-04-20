@@ -146,7 +146,7 @@ class TestAuth(unittest.TestCase):
             )
             self.assertEqual(False, valid)
             self.assertEqual(None, username)
-            log.warn.assert_called_with('Received bad token signature')
+            log.warning.assert_called_with('Received bad token signature')
 
             # Test bad username, but valid signature for users that have
             # been deleted
@@ -157,7 +157,7 @@ class TestAuth(unittest.TestCase):
             valid, username = self.htpasswd.check_token_auth(token)
             self.assertEqual(False, valid)
             self.assertEqual(None, username)
-            log.warn.assert_called_with(
+            log.warning.assert_called_with(
                 'Token auth signed message, but invalid user %s',
                 self.NOT_USER
             )
@@ -170,7 +170,7 @@ class TestAuth(unittest.TestCase):
             valid, username = self.htpasswd.check_token_auth(token)
             self.assertEqual(False, valid)
             self.assertEqual(None, username)
-            log.warn.assert_called_with(
+            log.warning.assert_called_with(
                 'Token and password do not match, '
                 '%s needs to regenerate token',
                 self.TEST_USER
