@@ -108,6 +108,11 @@ It can then be used by the user by adding it to the header of their requests, so
 Release Notes
 =============
 
+0.3.1
+`````
+
+- Corrected deprecated passlib API call
+
 0.3.0
 `````
 
