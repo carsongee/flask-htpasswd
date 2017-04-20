@@ -101,7 +101,7 @@ class HtPasswdAuth(object):
         Generate a digest of the htpasswd hash
         """
         return hashlib.sha256(
-            self.users.find(username)
+            self.users.get_hash(username)
         ).hexdigest()
 
     def generate_token(self, username):

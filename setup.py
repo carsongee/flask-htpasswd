@@ -69,7 +69,7 @@ setup(
     platforms='any',
     install_requires=[
         'Flask',
-        'passlib',
+        'passlib>=1.6',
         'itsdangerous',
         'tox',
     ],
