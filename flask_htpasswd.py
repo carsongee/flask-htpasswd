@@ -17,7 +17,7 @@ from passlib.apache import HtpasswdFile
 log = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 
-class HtPasswdAuth(object):
+class HtPasswdAuth:
     """Configure htpasswd based basic and token authentication."""
 
     def __init__(self, app=None):
@@ -31,6 +31,7 @@ class HtPasswdAuth(object):
         """
         Find and configure the user database from specified file
         """
+        # pylint: disable=inconsistent-return-statements
         app.config.setdefault('FLASK_AUTH_ALL', False)
         app.config.setdefault('FLASK_AUTH_REALM', 'Login Required')
         # Default set to bad file to trigger IOError
@@ -48,10 +49,11 @@ class HtPasswdAuth(object):
 
         # Allow requiring auth for entire app, with pre request method
         @app.before_request
-        def require_auth():  # pylint: disable=unused-variable
+        def require_auth():
+            # pylint: disable=unused-variable
             """Pre request processing for enabling full app authentication."""
             if not current_app.config['FLASK_AUTH_ALL']:
-                return
+                return None
             is_valid, user = self.authenticate()
             if not is_valid:
                 return self.auth_failed()

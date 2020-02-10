@@ -7,10 +7,10 @@ import os
 import unittest
 
 from flask import request, Flask, g
-# pylint: disable=no-name-in-module,import-error
-from flask.ext.htpasswd import HtPasswdAuth
 from itsdangerous import JSONWebSignatureSerializer as Serializer
 import mock
+
+from flask_htpasswd import HtPasswdAuth
 
 
 class TestAuth(unittest.TestCase):
@@ -189,13 +189,13 @@ class TestAuth(unittest.TestCase):
         self._setup_normal_extension()
         # Test successful basic auth
         with self.app.test_request_context(headers={
-            'Authorization': 'Basic {0}'.format(
-                base64.b64encode(
-                    '{0}:{1}'.format(
-                        self.TEST_USER, self.TEST_PASS
-                    ).encode('ascii')
-                ).decode('ascii')
-            )
+                'Authorization': 'Basic {0}'.format(
+                    base64.b64encode(
+                        '{0}:{1}'.format(
+                            self.TEST_USER, self.TEST_PASS
+                        ).encode('ascii')
+                    ).decode('ascii')
+                )
         }):
             wrapped, decorated = self._get_requires_auth_decorator()
             decorated()
@@ -204,9 +204,9 @@ class TestAuth(unittest.TestCase):
         # Test successful token header auth
         with self.app.app_context():
             with self.app.test_request_context(headers={
-                'Authorization': 'token {0}'.format(
-                    self.htpasswd.generate_token(self.TEST_USER)
-                )
+                    'Authorization': 'token {0}'.format(
+                        self.htpasswd.generate_token(self.TEST_USER)
+                    )
             }):
                 wrapped, decorated = self._get_requires_auth_decorator()
                 decorated()
@@ -227,7 +227,7 @@ class TestAuth(unittest.TestCase):
 
         # Test unsuccessful auth
         with self.app.test_request_context(headers={
-            'Authorization': 'token blah blah'
+                'Authorization': 'token blah blah'
         }):
             wrapped, decorated = self._get_requires_auth_decorator()
             response = decorated()

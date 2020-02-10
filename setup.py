@@ -45,6 +45,7 @@ class Tox(TestCommand):
 
     def run_tests(self):
         # Import here, cause outside the eggs aren't loaded
+        # pylint: disable=import-outside-toplevel
         import tox  # pylint: disable=import-error
         import shlex
         args = self.tox_args
