@@ -45,6 +45,7 @@ class Tox(TestCommand):
 
     def run_tests(self):
         # Import here, cause outside the eggs aren't loaded
+        # pylint: disable=import-outside-toplevel
         import tox  # pylint: disable=import-error
         import shlex
         args = self.tox_args
@@ -55,7 +56,7 @@ class Tox(TestCommand):
 
 setup(
     name='flask-htpasswd',
-    version='0.3.1',
+    version='0.4.0',
     url='http://github.com/carsongee/flask-htpasswd',
     license='BSD New',
     author='Carson Gee',
@@ -67,6 +68,7 @@ setup(
     zip_safe=False,
     include_package_data=True,
     platforms='any',
+    python_requires=">=3.5",
     install_requires=[
         'Flask',
         'passlib>=1.6',

@@ -7,9 +7,9 @@ Flask-htpasswd
 .. image:: https://img.shields.io/github/issues/carsongee/flask-htpasswd.svg
     :target: https://github.com/carsongee/flask-htpasswd/issues
 .. image:: https://img.shields.io/pypi/dm/flask-htpasswd.svg
-    :target: https://pypi.python.org/pypi/flask-htpasswd/0.1.0
+    :target: https://pypi.python.org/pypi/flask-htpasswd/
 .. image:: https://img.shields.io/pypi/v/flask-htpasswd.svg
-    :target: https://pypi.python.org/pypi/flask-htpasswd/0.1.0
+    :target: https://pypi.python.org/pypi/flask-htpasswd/
 .. image:: https://img.shields.io/badge/license-BSD-blue.svg
     :target: https://github.com/carsongee/flask-htpasswd/blob/master/LICENSE
 
