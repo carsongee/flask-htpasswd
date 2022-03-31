@@ -108,7 +108,11 @@ It can then be used by the user by adding it to the header of their requests, so
 Release Notes
 =============
 
-0.3.1
+0.4.0
+`````
+
+- Updated for newer language and Flask versions
+
 `````
 
 - Corrected deprecated passlib API call
@@ -122,7 +126,7 @@ Release Notes
 0.2.0
 `````
 
-- Python 3 compatability
+- Python 3 compatibility
 
 Acknowledgements
 ================
