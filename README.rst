@@ -133,9 +133,9 @@ Acknowledgements
 
 This is largely based on a combination of:
 
-- http://flask-basicauth.readthedocs.org/en/latest/
-- http://flask.pocoo.org/snippets/8/
-- http://blog.miguelgrinberg.com/post/restful-authentication-with-flask
+- https://flask-basicauth.readthedocs.io/en/latest/
+- `https://flask.pocoo.org/snippets/8/ <https://web.archive.org/web/20190706125230/https://flask.pocoo.org/snippets/8/>`_
+- https://blog.miguelgrinberg.com/post/restful-authentication-with-flask
 
 
 Links
