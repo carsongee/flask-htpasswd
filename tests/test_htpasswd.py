@@ -4,11 +4,11 @@ Test module for Flask-htpasswd extension
 from __future__ import absolute_import, unicode_literals
 import base64
 import os
+import jwt
 import unittest
+import mock
 
 from flask import request, Flask, g
-from itsdangerous import JSONWebSignatureSerializer as Serializer
-import mock
 
 from flask_htpasswd import HtPasswdAuth
 
@@ -118,13 +118,14 @@ class TestAuth(unittest.TestCase):
             # Now that we verified our hashhash, independently verify
             # the data with a serializer from config (not trusting
             # get_signature here).
-            serializer = Serializer(self.app.config['FLASK_SECRET'])
-            self.assertEqual(serializer.loads(token)['hashhash'], hashhash)
+            key = self.app.config['FLASK_SECRET']
+            decoded_hashhash = jwt.decode(token, key, algorithms=["HS512"])['hashhash']
+            self.assertEqual(hashhash, decoded_hashhash)
 
             # Now go ahead and verify the reverse, trusting, and
             # verifying get_signature.
-            serializer = self.htpasswd.get_signature()
-            data = serializer.loads(token)
+            key = self.htpasswd.get_signature()
+            data = jwt.decode(token, key, algorithms=["HS512"])
             self.assertTrue(data['username'], test_user)
             self.assertTrue(data['hashhash'], hashhash)
 
@@ -150,10 +151,10 @@ class TestAuth(unittest.TestCase):
 
             # Test bad username, but valid signature for users that have
             # been deleted
-            sig = self.htpasswd.get_signature()
-            token = sig.dumps({
-                'username': self.NOT_USER,
-            })
+            key = self.htpasswd.get_signature()
+            token = jwt.encode({
+                'username': self.NOT_USER
+            }, key, algorithm="HS512")
             valid, username = self.htpasswd.check_token_auth(token)
             self.assertEqual(False, valid)
             self.assertEqual(None, username)
@@ -163,10 +164,10 @@ class TestAuth(unittest.TestCase):
             )
 
             # Test that a different password invalidates token
-            token = sig.dumps({
+            token = jwt.encode({
                 'username': self.TEST_USER,
                 'hashhash': self.htpasswd.get_hashhash('norm')
-            })
+            }, key, algorithm="HS512")
             valid, username = self.htpasswd.check_token_auth(token)
             self.assertEqual(False, valid)
             self.assertEqual(None, username)

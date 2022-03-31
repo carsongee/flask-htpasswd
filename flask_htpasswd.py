@@ -6,11 +6,10 @@ authentication using htpasswd files
 from __future__ import absolute_import, unicode_literals
 from functools import wraps
 import hashlib
+import jwt
 import logging
 
 from flask import request, Response, current_app, g
-from itsdangerous import JSONWebSignatureSerializer as Serializer
-from itsdangerous import BadSignature
 from passlib.apache import HtpasswdFile
 
 
@@ -91,20 +90,21 @@ class HtPasswdAuth:
             username
         )
 
-    @staticmethod
-    def get_signature():
+    def get_signature(self):
         """
         Setup crypto sig.
         """
-        return Serializer(current_app.config['FLASK_SECRET'])
+        with self.app.app_context():
+            return current_app.config['SECRET_KEY']
 
     def get_hashhash(self, username):
         """
         Generate a digest of the htpasswd hash
         """
-        return hashlib.sha256(
-            self.users.get_hash(username)
-        ).hexdigest()
+        userhash = self.users.get_hash(username)
+        if not userhash:
+            return ''
+        return hashlib.sha256(userhash).hexdigest()
 
     def generate_token(self, username):
         """
@@ -113,24 +113,21 @@ class HtPasswdAuth:
         Return the token for the given user by signing a token of
         the username and a hash of the htpasswd string.
         """
-        serializer = self.get_signature()
-        return serializer.dumps(
-            {
-                'username': username,
-                'hashhash': self.get_hashhash(username)
-            }
-        ).decode('UTF-8')
+        key = self.get_signature()
+        return jwt.encode({
+            'username': username,
+            'hashhash': self.get_hashhash(username)
+        }, key, algorithm="HS512")
 
     def check_token_auth(self, token):
         """
         Check to see who this is and if their token gets
         them into the system.
         """
-        serializer = self.get_signature()
-
+        key = self.get_signature()
         try:
-            data = serializer.loads(token)
-        except BadSignature:
+            data = jwt.decode(token, key, algorithms=["HS512"])
+        except:
             log.warning('Received bad token signature')
             return False, None
         if data['username'] not in self.users.users():

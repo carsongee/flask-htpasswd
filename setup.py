@@ -71,8 +71,8 @@ setup(
     python_requires=">=3.5",
     install_requires=[
         'Flask',
-        'passlib>=1.6',
-        'itsdangerous',
+        'passlib',
+        'pyjwt',
         'tox',
     ],
     tests_require=['tox'],
