@@ -25,7 +25,7 @@ class TestAuth(unittest.TestCase):
     def setUp(self):
         super(TestAuth, self).setUp()
         self.app = Flask(__name__)
-        self.app.config['FLASK_SECRET'] = 'dummy'
+        self.app.config['SECRET_KEY'] = 'dummy'
         self.app.debug = True
         self.htpasswd = None
 
@@ -118,7 +118,7 @@ class TestAuth(unittest.TestCase):
             # Now that we verified our hashhash, independently verify
             # the data with a serializer from config (not trusting
             # get_signature here).
-            key = self.app.config['FLASK_SECRET']
+            key = self.app.config['SECRET_KEY']
             decoded_hashhash = jwt.decode(token, key, algorithms=["HS512"])['hashhash']
             self.assertEqual(hashhash, decoded_hashhash)
 
