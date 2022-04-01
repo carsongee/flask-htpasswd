@@ -45,7 +45,7 @@ something like:
 
   app = flask.Flask(__name__)
   app.config['FLASK_HTPASSWD_PATH'] = '/path/to/.htpasswd'
-  app.config['SECRET_KEY'] = 'Hey Hey Kids, secure me!'
+  app.config['FLASK_SECRET'] = 'Hey Hey Kids, secure me!'
 
   htpasswd = HtPasswdAuth(app)
   
@@ -85,7 +85,7 @@ can serve it out to the user with something like
 
   app = flask.Flask(__name__)
   app.config['FLASK_HTPASSWD_PATH'] = '/path/to/.htpasswd'
-  app.config['SECRET_KEY'] = 'Hey Hey Kids, secure me!'
+  app.config['FLASK_SECRET'] = 'Hey Hey Kids, secure me!'
   htpasswd = HtPasswdAuth(app)
   
 
@@ -112,7 +112,7 @@ Release Notes
 `````
 
 - Switch from itsdangerous to pyjwt
-- Renamed FLASK_SECRET into SECRET_KEY
+- Renamed FLASK_SECRET into FLASK_SECRET
 
 0.4.0
 `````

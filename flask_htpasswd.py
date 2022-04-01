@@ -95,7 +95,7 @@ class HtPasswdAuth:
         Setup crypto sig.
         """
         with self.app.app_context():
-            return current_app.config['SECRET_KEY']
+            return current_app.config['FLASK_SECRET']
 
     def get_hashhash(self, username):
         """
