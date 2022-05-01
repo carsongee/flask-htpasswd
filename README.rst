@@ -108,9 +108,16 @@ It can then be used by the user by adding it to the header of their requests, so
 Release Notes
 =============
 
-0.3.1
+0.5.0
 `````
 
+- Switch from itsdangerous to pyjwt
+- Renamed FLASK_SECRET into FLASK_SECRET
+
+0.4.0
+`````
+
+- Updated for newer language and Flask versions
 - Corrected deprecated passlib API call
 
 0.3.0
@@ -122,16 +129,16 @@ Release Notes
 0.2.0
 `````
 
-- Python 3 compatability
+- Python 3 compatibility
 
 Acknowledgements
 ================
 
 This is largely based on a combination of:
 
-- http://flask-basicauth.readthedocs.org/en/latest/
-- http://flask.pocoo.org/snippets/8/
-- http://blog.miguelgrinberg.com/post/restful-authentication-with-flask
+- https://flask-basicauth.readthedocs.io/en/latest/
+- `https://flask.pocoo.org/snippets/8/ <https://web.archive.org/web/20190706125230/https://flask.pocoo.org/snippets/8/>`_
+- https://blog.miguelgrinberg.com/post/restful-authentication-with-flask
 
 
 Links

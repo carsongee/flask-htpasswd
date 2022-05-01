@@ -56,7 +56,7 @@ class Tox(TestCommand):
 
 setup(
     name='flask-htpasswd',
-    version='0.4.0',
+    version='0.5.0',
     url='http://github.com/carsongee/flask-htpasswd',
     license='BSD New',
     author='Carson Gee',
@@ -71,8 +71,8 @@ setup(
     python_requires=">=3.5",
     install_requires=[
         'Flask',
-        'passlib>=1.6',
-        'itsdangerous',
+        'passlib',
+        'pyjwt',
         'tox',
     ],
     tests_require=['tox'],
