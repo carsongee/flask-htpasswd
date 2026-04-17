@@ -3,7 +3,6 @@
 Decorator, configuration, and error handler for basic and token
 authentication using htpasswd files
 """
-from __future__ import absolute_import, unicode_literals
 from functools import wraps
 import hashlib
 import jwt
@@ -114,9 +113,12 @@ class HtPasswdAuth:
         the username and a hash of the htpasswd string.
         """
         key = self.get_signature()
+        hashhash = self.get_hashhash(username)
+        if not hashhash:
+            raise ValueError('User {0} not found'.format(username))
         return jwt.encode({
             'username': username,
-            'hashhash': self.get_hashhash(username)
+            'hashhash': hashhash
         }, key, algorithm="HS512")
 
     def check_token_auth(self, token):
@@ -170,7 +172,7 @@ class HtPasswdAuth:
         basic_auth = request.authorization
         is_valid = False
         user = None
-        if basic_auth:
+        if basic_auth and getattr(basic_auth, 'type', None) == 'basic':
             is_valid, user = self.check_basic_auth(
                 basic_auth.username, basic_auth.password
             )

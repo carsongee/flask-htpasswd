@@ -13,12 +13,10 @@ Links
 * `development version
   <https://github.com/carsongee/flask-htpasswd/archive/master.tar.gz#egg=flask-htpasswd-dev>`_
 """
-from __future__ import absolute_import, unicode_literals
-import codecs
 from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
-with codecs.open('README.rst', encoding='utf-8') as readme:
+with open('README.rst', encoding='utf-8') as readme:
     README = readme.read()
 
 
@@ -68,7 +66,7 @@ setup(
     zip_safe=False,
     include_package_data=True,
     platforms='any',
-    python_requires=">=3.5",
+    python_requires=">=3.8",
     install_requires=[
         'Flask',
         'passlib',
@@ -85,8 +83,13 @@ setup(
         'Programming Language :: Python',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
         'Framework :: Flask',
     ]
 )
