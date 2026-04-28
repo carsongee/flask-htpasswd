@@ -1,14 +1,13 @@
 """
 Test module for Flask-htpasswd extension
 """
-from __future__ import absolute_import, unicode_literals
 import base64
 import os
-import jwt
 import unittest
-import mock
+from unittest import mock
 
-from flask import request, Flask, g
+import jwt
+from flask import Flask, g, request
 
 from flask_htpasswd import HtPasswdAuth
 

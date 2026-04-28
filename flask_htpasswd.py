@@ -3,15 +3,13 @@
 Decorator, configuration, and error handler for basic and token
 authentication using htpasswd files
 """
-from __future__ import absolute_import, unicode_literals
-from functools import wraps
 import hashlib
-import jwt
 import logging
+from functools import wraps
 
-from flask import request, Response, current_app, g
+import jwt
+from flask import Response, current_app, g, request
 from passlib.apache import HtpasswdFile
-
 
 log = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
@@ -114,9 +112,12 @@ class HtPasswdAuth:
         the username and a hash of the htpasswd string.
         """
         key = self.get_signature()
+        hashhash = self.get_hashhash(username)
+        if not hashhash:
+            raise ValueError('User {0} not found'.format(username))
         return jwt.encode({
             'username': username,
-            'hashhash': self.get_hashhash(username)
+            'hashhash': hashhash
         }, key, algorithm="HS512")
 
     def check_token_auth(self, token):
@@ -127,7 +128,7 @@ class HtPasswdAuth:
         key = self.get_signature()
         try:
             data = jwt.decode(token, key, algorithms=["HS512"])
-        except:
+        except Exception:
             log.warning('Received bad token signature')
             return False, None
         if data['username'] not in self.users.users():
@@ -170,7 +171,7 @@ class HtPasswdAuth:
         basic_auth = request.authorization
         is_valid = False
         user = None
-        if basic_auth:
+        if basic_auth and getattr(basic_auth, 'type', None) == 'basic':
             is_valid, user = self.check_basic_auth(
                 basic_auth.username, basic_auth.password
             )
