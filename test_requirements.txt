@@ -2,4 +2,5 @@ mock
 pytest
 pytest-cov
 pytest-watch
+ruff
 coveralls

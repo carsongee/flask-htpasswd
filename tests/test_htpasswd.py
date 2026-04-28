@@ -3,11 +3,11 @@ Test module for Flask-htpasswd extension
 """
 import base64
 import os
-import jwt
 import unittest
 from unittest import mock
 
-from flask import request, Flask, g
+import jwt
+from flask import Flask, g, request
 
 from flask_htpasswd import HtPasswdAuth
 

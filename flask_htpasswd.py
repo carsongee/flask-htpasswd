@@ -3,14 +3,13 @@
 Decorator, configuration, and error handler for basic and token
 authentication using htpasswd files
 """
-from functools import wraps
 import hashlib
-import jwt
 import logging
+from functools import wraps
 
-from flask import request, Response, current_app, g
+import jwt
+from flask import Response, current_app, g, request
 from passlib.apache import HtpasswdFile
-
 
 log = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
@@ -129,7 +128,7 @@ class HtPasswdAuth:
         key = self.get_signature()
         try:
             data = jwt.decode(token, key, algorithms=["HS512"])
-        except:
+        except Exception:
             log.warning('Received bad token signature')
             return False, None
         if data['username'] not in self.users.users():
